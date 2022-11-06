@@ -12,7 +12,11 @@
     <!-- <div onclick="divClick()"> -->
         <!-- <div onclick="alert('Diste click al div')"> -->
             <div >
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut fuga dolore debitis voluptatibus nulla itaque porro iste aperiam, fugiat cupiditate. Architecto expedita aliquam earum esse nulla perferendis optio, minus sequi.
+        Lorem ipsum dolor sit, amet consectetur adipisicing 
+        elit. Aut fuga dolore debitis voluptatibus nulla 
+        itaque porro iste aperiam, fugiat cupiditate. 
+        Architecto expedita aliquam earum esse nulla 
+        perferendis optio, minus sequi.
 
     </div>
     <label for="">Cuantas veces haz precionado el boton?</label>
@@ -210,8 +214,8 @@
           //grade = score > 25 ? "A" : (score > 20 ? "B" : (score > 15 ? "C" : (score > 10 ? "D" : (score > 10 ? "E" : "F"))))
           
           function getLetter(s) {
-    let letter;
-    const firstLetter = s[0];
+            let letter;
+            const firstLetter = s[0];
 
     switch (firstLetter){
         case "a": case "e": case"i": case "o": case "u":
@@ -259,8 +263,74 @@ function vowelsAndConsonants(s) {
         console.log(e)
     })
 }
-    </script>
 
+    let Ordenar = [2,3,8,7,4,5,8,6,2,4,6,7];
+    let ordenar1=Ordenar;
+    // ordenar de mayor a menor
+    Ordenar.sort(function (a,b) { return b-a });
+     // ordenar de menor a mayor
+     Ordenar.sort(function (a,b) { return b-a });
+
+    function getSecondLargest(nums) {
+        // Complete the function
+        nums.sort((a,b)=>{ return b-a })
+        let firstLargest=nums[0];
+        let secondLargest;
+        for (let i =0;i<nums.length;i++){
+            if(nums[i]<firstLargest){
+                secondLargest=nums[i];
+                break;
+            } 
+        }
+        return secondLargest;
+    }    
+    function getSecondLargest1(nums) { 
+       let primerValor =0;
+       let segundoValor=0;
+
+       nums.forEach(e => {
+            if(e>primerValor){
+                primerValor=e
+            }
+        });
+        nums.forEach(e => {
+            if(e<primerValor && e>segundoValor){
+                segundoValor=e;
+            }
+        });
+
+        return segundoValor;
+     }     
+     
+     function Rectangle(a, b) {
+            return{
+                length:a,
+                width:b,
+                perimeter:2*(a+b),
+                area:a*b
+            }
+        }  
+
+        const objGetCount=[
+            {x:12,y:12},
+            {x:10,y:10},
+            {x:6,y:6},
+            {x:12,y:14}
+        ];
+        
+        function getCount(objects) {
+            let count=0;
+            objects.map(e=>{
+                if(e.x==e.y){
+                    count++;
+                }
+            })
+            return count;
+        }
+
+        
+    </script>
+    
 </body>
 
 </html>
