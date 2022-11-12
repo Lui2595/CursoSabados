@@ -9,20 +9,21 @@
 switch ($_POST["action"]) {
     case 'create':
         $r=$_POST;
-        if(isset($r["nombre"],$r["direccion"],$r["rfc"],$r["telefono"],$r["email"],$r["celular"])){
+        if(isset($r["nombre"],$r["rfc"],$r["telefono"],$r["responsable"])){
             $a=$r["nombre"];
             $b=$r["rfc"];
             $c=$r["telefono"];
-            $d=$r["email"];
-            $e=$r["celular"];
-            $f=$r["direccion"];
-            $query="INSERT INTO clientes VALUES (null,'$a','$f','$b','$c','$d','$e')";
+            $d=$r["responsable"];
+            $query="INSERT INTO proveedores VALUES (null,'$a','$b','$c','$d')";
             $resutl=$db->query($query);
             if($resutl){
-                echo "Agregado con Exito";
-                header("Location: ../clientes.php");
+                echo json_encode(["success"=>"true",
+                "message"=>"Añadido con Exito",
+                "data"=>[],]);
             }else{
+               http_response_code(400);
                echo $db->error." number:". $db->errno;
+               
             }
 
         }else{
@@ -33,7 +34,7 @@ switch ($_POST["action"]) {
         break;
     case 'read':
         
-            $query="SELECT * FROM clientes";
+            $query="SELECT * FROM proveedores";
             $resutl=$db->query($query);
             if($resutl){
                 $rows = array();
@@ -41,31 +42,35 @@ switch ($_POST["action"]) {
                 {
                     $rows[] = $row;
                 }
-                echo json_encode($rows); // Retornar JSON
+                echo json_encode([
+                    "success"=>true,"data"=>$rows,
+                    "message"=>"Estos son todos los proveedores"
+                ]); // Retornar JSON
                 
                 //var_dump( $rows);
             }else{
+                http_response_code(400);
                echo $db->error." number:". $db->errno;
             }
         break;
     case 'update':
        // echo "Estas tratando de actualizar ";
         $r=$_POST;
-        if(isset($r["nombre"],$r["direccion"],$r["rfc"],$r["telefono"],$r["email"],$r["celular"],$r["id"])){
+        if(isset($r["nombre"],$r["rfc"],$r["telefono"],$r["responsable"],$r["id"])){
             $a=$r["nombre"];
             $b=$r["rfc"];
             $c=$r["telefono"];
-            $d=$r["email"];
-            $e=$r["celular"];
-            $f=$r["direccion"];
+            $d=$r["responsable"];
             $id=$r["id"];
-            $query="UPDATE clientes SET nombre='$a',direccion='$f',rfc='$b'
-            ,tel='$c',email='$d',cel='$e' WHERE id='$id'";
+            $query="UPDATE proveedores SET nombre='$a',rfc='$b'
+            ,telefono='$c',responsable='$d' WHERE id='$id'";
             $resutl=$db->query($query);
             if($resutl){
-                echo "Actualizado con Exito";
-                header("Location: ../clientes.php");
+                echo json_encode(["success"=>"true",
+                "message"=>"Actualizado con Exito",
+                "data"=>[],]);
             }else{
+                http_response_code(400);
                echo $db->error." number:". $db->errno;
             }
 
@@ -80,12 +85,14 @@ switch ($_POST["action"]) {
         $r=$_POST;
         if(isset($r["id"])){
             $a=$r["id"];
-            $query="DELETE FROM clientes WHERE id='$a'";
+            $query="DELETE FROM proveedores WHERE id='$a'";
             $resutl=$db->query($query);
             if($resutl){
-                echo "Eliminado con Exito";
-                header("Location: ../clientes.php");
+                echo json_encode(["success"=>"true",
+                "message"=>"Eliminado con Exito",
+                "data"=>[],]);
             }else{
+                http_response_code(400);
                echo $db->error." number:". $db->errno;
             }
 
