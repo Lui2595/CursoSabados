@@ -83,7 +83,7 @@
         </div>
     </div>
 
-<?php require "inc/scripts.php";?>
+<?php require_once "inc/scripts.php";?>
     <script type="text/javascript">
         $("#addCliente").click(()=>{
             $("#clienteModal").modal("show");
