@@ -179,6 +179,32 @@ switch ($_POST["action"]) {
                     "message"=>"Estos son todos los recursos"
                 ]); 
             break;
+        case 'buscarCliente':
+            $r=$_POST;
+            if(isset($r["cliente"])){
+                $a=$r["cliente"];
+                $query="SELECT * FROM clientes WHERE nombre like '%$a%' or direccion like '%$a%' or rfc like '%$a%' or tel like '%$a%'or email like '%$a%' or cel like '%$a%' LIMIT 10";
+                $resutl=$db->query($query);
+                if($resutl){
+                    $rows=[];
+                    while($row = $resutl->fetch_assoc())
+                    {
+                        $rows[] = $row;
+                    }
+                    echo json_encode(["success"=>"true",
+                    "message"=>"Estos son los resultados",
+                    "data"=>$rows]);
+                }else{
+                    http_response_code(400);
+                echo $db->error." number:". $db->errno;
+                }
+
+            }else{
+                http_response_code(400);
+                echo "Bad Request";
+                // header("Location: ../clientes.php");
+            }
+            break;
 }
 
 ?>
