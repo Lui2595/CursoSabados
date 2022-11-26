@@ -44,7 +44,8 @@
                         <b class="mx-1" id="total">$0.00</b>
                     </div>
                     <div class="d-flex m-1">
-                        <select class="form-select" name="metodo_pago" id="metodo_pago">
+                        <form action="#" id="formMetodoPago">
+                        <select class="form-select" name="metodo_pago" id="metodo_pago" required>
                             <option value="">Seleciona Metodo de pago</option>
                             <option value="1">Efectivo</option>
                             <option value="2">Tarjeta Debito</option>
@@ -52,22 +53,25 @@
                             <option value="4">Cheque</option>
                             <!-- <option value="5">Credito</option> -->
                         </select>
+                        </form>
                     </div>
                     <div class="d-flex">
                         <button class="btn btn-danger m-1" id="cancelarCompra">Cancelar Compra</button>
-                        <button class="btn btn-success m-1">Confirmar Compra</button>
+                        <button class="btn btn-success m-1" id="confirmarCompra">Confirmar Compra</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-lg-5 col-12 p-1">
-        <div class="my-2 d-flex">
-            <input type="text" name="" id="" class="form-control" placeholder="Buscar Producto">
-            <button class="mx-2 btn btn-primary">Buscar</button>
+        <div class="my-2 ">
+        <form action="#" id="formBuscarProducto" class="d-flex">
+                <input type="text" name="" id="buscarProducto" class="form-control" placeholder="Buscar Producto" required>
+                <button class="mx-2 btn btn-primary">Buscar</button>
+            </form>
         </div>
         <div style="border: solid gray .5px; border-radius: 5px;" class="mb-2">
-            <div>
+            <div id="tituloCategoria">
                 Categoria
             </div>
             <div class="d-flex flex-wrap justify-content-around align-content-start" id="productos" style="height: 58vh;">
@@ -165,6 +169,7 @@
     }
 
     function cargarProductos(cat) {
+        $("#tituloCategoria").html(cat)
         $("#productos").empty();
         recursos.productos.forEach((e) => {
             if (e.categoria == cat) {
@@ -504,6 +509,24 @@
             }
         });
     })
+    
+    $("#formBuscarProducto").submit((e) => {
+        e.preventDefault();
+        $("#tituloCategoria").html("Resultado de Busqueda");
+        const st=$("#buscarProducto").val().toLowerCase();
+        $("#productos").empty();
+        let count=0;
+        recursos.productos.map((e) => {
+            if ( e.nombre.toLowerCase().includes(st) || e.descripcion.toLowerCase().includes(st)) {
+                const ht = `<button class="p-3 m-1 btn btn-primary" onclick="addProducto(${e.id})">${e.nombre}</button>`;
+                $("#productos").append(ht);
+                count++
+            }
+        })
+        if(!count){
+            $("#productos").append("No se encontraron productos");
+        }
+    })
     function limpiarCliente(){
         $("#nombre_cliente").html("Publica en General");
         $("#rfc_cliente").html("XXXX000000XXX");
@@ -545,6 +568,31 @@
         })
         return el;
     }
+    $("#confirmarCompra").click((e)=>{
+        const valid=document.querySelector('#formMetodoPago').reportValidity();
+        if(!valid){
+            return
+        }
+        if(orden.length==0){
+            alert("Por favor agrega articulos a la orden");
+            return
+        }
+        const data ={
+            action:"confirmarCompra",
+            orden:orden,
+            cliente:cliente,
+            m_pago:$("#metodo_pago").val()
+        }
+        console.log(data);
+        $.ajax({
+            type: "POST",
+            url: urlController,
+            data: data,
+            success: function (response) {
+                
+            }
+        });
+    })
 </script>
 
 <?php require "inc/foot.php"; ?>
