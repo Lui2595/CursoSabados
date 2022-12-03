@@ -58,6 +58,7 @@
                     <div class="d-flex">
                         <button class="btn btn-danger m-1" id="cancelarCompra">Cancelar Compra</button>
                         <button class="btn btn-success m-1" id="confirmarCompra">Confirmar Compra</button>
+                      
                     </div>
                 </div>
             </div>
@@ -83,6 +84,7 @@
             </div>
         </div>
     </div>
+   
 </div>
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -589,7 +591,17 @@
             url: urlController,
             data: data,
             success: function (response) {
-                
+                $("#metodo_pago").val("");
+                orden=[];
+                cargarRecursos();
+                setCookie("orden", JSON.stringify(orden), 0);
+                limpiarCliente();
+                $(".modal-body").empty();
+                $("#modalLabel").html("Confirmación de Compra");
+                $(".modal-body").append(`<i class="fa-solid fa-check" style="color:green;font-size:80px;"></i> <br>`);
+                $(".modal-body").append("Gracias por su Compra ");  
+
+                $("#modal").modal("show");
             }
         });
     })

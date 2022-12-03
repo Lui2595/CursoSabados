@@ -7,6 +7,8 @@
     <title>Document</title>
     <link rel="stylesheet" href="vendors/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="vendors/fontawesome/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css"
 </head>
 
 <body >

@@ -280,6 +280,12 @@ switch ($_POST["action"]) {
                         http_response_code(400);
                         echo $db->error." number:". $db->errno;
                     }
+                    $query="UPDATE inventario SET cantidad=(cantidad-$c) WHERE id_producto=$p";
+                    $resutl=$db->query($query);
+                    if(!$resutl){
+                        http_response_code(400);
+                        echo $db->error." number:". $db->errno;
+                    }
                 }
 
             }else{

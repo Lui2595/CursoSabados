@@ -158,6 +158,7 @@
 <?php require_once "inc/scripts.php";?>
 
     <script type="text/javascript">
+        $("table").DataTable();
         $("#addCliente").click(()=>{
             $("#clienteModal").modal("show");
             $("#clienteLabel").html("Añadir Cliente");

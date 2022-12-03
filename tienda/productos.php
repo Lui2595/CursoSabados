@@ -91,6 +91,10 @@
             cargarDatos();
             
         })
+    
+        $( window ).on("load",function() {
+            // $("table").DataTable();
+        });
         function cargarRecursos(){
             const fd=new FormData();
             fd.append("action","resources")
@@ -113,7 +117,9 @@
                 error: function(jqHXR,textStatus,errorThrow){
                     console.log(jqHXR,textStatus,errorThrow);
                 }
-            });
+            })
+               
+        
         }
         function actualizarFormulario(){
             recursos.forEach((e)=>{
@@ -121,6 +127,10 @@
                 $("#proveedor").append(ht)
             })
             
+        }
+        async function Table(){
+            await cargarTabla();
+            $("table").DataTable();
         }
         function cargarDatos(){
             const fd=new FormData();
@@ -135,7 +145,8 @@
                    response= JSON.parse(response)
                    if(response.success){
                     datos=response.data;
-                    cargarTabla();
+                    cargarTabla1();
+                   // Table();
                    }else{
                     alert(response.message);
                    }
@@ -144,6 +155,16 @@
                     console.log(jqHXR,textStatus,errorThrow);
                 }
             });
+        }
+        function cargarTabla1(){
+            let dt = $("table").DataTable();
+            dt.clear().draw();
+            datos.forEach((e,i)=>{
+                const ht =`<button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminar(${e.id})">Elminar</button> `;
+              dt.row.add([e.id,e.nombre,e.proveedor,e.descripcion,e.categoria,e.precio,ht]).draw( false );
+            })
+            
         }
         function cargarTabla(){
             $("#tableBody").empty();
@@ -165,12 +186,12 @@
                     <td>${e.descripcion}</td>
                     <td>${e.categoria}</td>
                     <td>${e.precio}</td>
-                    <td><button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminar(${e.id})">Elminar</button>  </td>
+                    <td> </td>
                 </tr>
                 `;
                 $("#tableBody").append(ht);
-            })
+            })  
+           
         }
         function findProveedor(id){
            let Proveedor;

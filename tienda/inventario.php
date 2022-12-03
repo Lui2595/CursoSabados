@@ -9,7 +9,7 @@
                 <button type="button" class="btn btn-primary">Buscar</button>
             </div>
         </div>
-        <table class="table mt-3 bg-white ">
+        <table class="table mt-3 bg-white " id="miTabla">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -75,6 +75,7 @@
         $(document).ready(()=>{
             cargarRecursos();
             cargarDatos();
+            $("#miTabla").DataTable();
             
         })
         function cargarRecursos(){

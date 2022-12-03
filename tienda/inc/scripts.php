@@ -1,6 +1,7 @@
 <script src="vendors/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="vendors/jquery/jquery-3.6.0.js"></script>
 <script src="vendors/currency/currency.min.js"></script>
+<script type="text/javascript" src="vendors/DataTables/datatables.js"></script>
 
 <script type="text/javascript">
     function setCookie(cname, cvalue, exdays) {
