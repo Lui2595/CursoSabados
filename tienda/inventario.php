@@ -133,7 +133,8 @@
             });
         }
         function cargarTabla(){
-            $("#tableBody").empty();
+            //$("#tableBody").empty();
+            const dt=$("table").DataTable();
             datos.forEach((e,i)=>{
                 let producto ="";
                 for (let j = 0; j < recursos.length; j++) {
@@ -143,17 +144,21 @@
                         break;
                     }
                 }
-                
                 const ht =`
-                <tr>
-                    <td>${e.id}</td>
-                    <td>${producto}</td>
-                    <td>${e.cantidad}</td>
-                    <td><button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
-                    <button type="button" class="btn btn-danger" onclick="eliminar(${e.id})">Elminar</button>  </td>
-                </tr>
-                `;
-                $("#tableBody").append(ht);
+                <button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
+                 <button type="button" class="btn btn-danger" onclick="eliminar(${e.id})">Elminar</button>  </td>
+                `
+                dt.row.add([e.id,producto,e.cantidad,ht]).draw(false);
+                // const ht =`
+                // <tr>
+                //     <td>${e.id}</td>
+                //     <td>${producto}</td>
+                //     <td>${e.cantidad}</td>
+                //     <td><button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
+                //     <button type="button" class="btn btn-danger" onclick="eliminar(${e.id})">Elminar</button>  </td>
+                // </tr>
+                // `;
+                // $("#tableBody").append(ht);
             })
         }
         function findElemen(id){

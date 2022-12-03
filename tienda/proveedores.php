@@ -104,20 +104,25 @@
             });
         }
         function cargarTabla(){
-            $("#tableBody").empty();
+            
+            const dt=$("table").DataTable();
+            dt.clear().draw();
+
             datos.forEach((e,i)=>{
-                const ht =`
-                <tr>
-                    <td>${e.id}</td>
-                    <td>${e.nombre}</td>
-                    <td>${e.rfc}</td>
-                    <td>${e.telefono}</td>
-                    <td>${e.responsable}</td>
-                    <td><button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
+                // const ht =`
+                // <tr>
+                //     <td>${e.id}</td>
+                //     <td>${e.nombre}</td>
+                //     <td>${e.rfc}</td>
+                //     <td>${e.telefono}</td>
+                //     <td>${e.responsable}</td>
+                //     <td></tr>
+                // `;
+                const ht =`<button type="button" class="btn btn-secondary" onclick="editar(${e.id})">Editar</button>
                     <button type="button" class="btn btn-danger" onclick="eliminar(${e.id})">Elminar</button>  </td>
-                </tr>
                 `;
-                $("#tableBody").append(ht);
+              dt.row.add([e.id,e.nombre,e.rfc,e.telefono,e.responsable,ht]).draw( false );
+           
             })
         }
         function findProveedor(id){
