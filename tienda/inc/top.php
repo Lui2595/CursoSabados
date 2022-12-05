@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="src/style.css">
     <link rel="stylesheet" href="vendors/fontawesome/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css"
+    <link rel="stylesheet" type="text/css" href="vendors/daterangepicker/daterangepicker.css" />
 </head>
 
 <body >
@@ -42,6 +43,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="pdv.php">Punto de Venta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="resultados.php">Resultados</a>
           </li>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

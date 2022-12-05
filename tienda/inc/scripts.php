@@ -3,6 +3,7 @@
 <script src="vendors/currency/currency.min.js"></script>
 <script type="text/javascript" src="vendors/DataTables/datatables.js"></script>
 
+
 <script type="text/javascript">
     function setCookie(cname, cvalue, exdays) {
         const d = new Date();

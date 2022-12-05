@@ -104,7 +104,7 @@
             });
         }
         function cargarTabla(){
-            
+           //SELECT * FROM `ventas` WHERE fecha BETWEEN DATE_FORMAT("2022-11-25",'%Y-%m-%d') and DATE_FORMAT('2022-11-30','%Y-%m-%d'); 
             const dt=$("table").DataTable();
             dt.clear().draw();
 
