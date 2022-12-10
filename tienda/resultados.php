@@ -44,6 +44,10 @@
                 <h2>Venta diaria </h2>
                 <canvas id="grafica"></canvas>
             </div>
+            <div class="d-flex flex-column mt-3" id="">
+                <h2>Productos mas vendidos </h2>
+                <canvas id="grafica1"></canvas>
+            </div>
         </div>
     </div>
 
@@ -93,25 +97,47 @@
 
         const ctx = document.getElementById('grafica');
         const grafica=new Chart(ctx, {
-        type: 'bar',
-        data: {
-            // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            // datasets: [{
-            // label: '# of Votes en Saltillo',
-            // data: [12, 19, 3, 5, 2, 3],
-            // borderWidth: 1
-            // },{
-            // label: '# of Votes en torreon',
-            // data: [12, 19, 3, 5, 2, 3],
-            // borderWidth: 1
-        },
-        options: {
-            scales: {
-            y: {
-                beginAtZero: true
+            type: 'bar',
+            data: {
+                // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                // datasets: [{
+                // label: '# of Votes en Saltillo',
+                // data: [12, 19, 3, 5, 2, 3],
+                // borderWidth: 1
+                // },{
+                // label: '# of Votes en torreon',
+                // data: [12, 19, 3, 5, 2, 3],
+                // borderWidth: 1
+            },
+            options: {
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                }
             }
+        });
+        const ctx1 = document.getElementById('grafica1');
+        const grafica1=new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                // datasets: [{
+                // label: '# of Votes en Saltillo',
+                // data: [12, 19, 3, 5, 2, 3],
+                // borderWidth: 1
+                // },{
+                // label: '# of Votes en torreon',
+                // data: [12, 19, 3, 5, 2, 3],
+                // borderWidth: 1
+            },
+            options: {
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                }
             }
-        }
         });
 
 
@@ -219,7 +245,7 @@
             ticket_prom/=datos.length;
             $("#t_promedio").html(currency(ticket_prom).format())
             clientes.sort((p1, p2) => (p1.total < p2.total) ? 1 : (p1.total > p2.total) ? -1 : 0)
-            console.log(clientes);
+            //console.log(clientes);
             clientes.every((e,i)=>{
                 if(i>4) {return false};
 
@@ -244,8 +270,25 @@
                     objeto.total+= parseFloat(e.total);
                 }
             })
-            console.log(arrDias);
+            //console.log(arrDias);
             addDataset(grafica,"Total de Ventas", arrDias )
+
+            let prod=[];
+            productos.forEach((e)=>{
+                if(prod.find((arr)=>{return arr.nombre==e.nombre})==undefined){
+                    prod.push({nombre:e.nombre, cantidad:0});
+                }
+            })
+            productos.forEach((e)=>{
+                let objeto =prod.find((arr)=>{
+                    return arr.nombre==e.nombre;
+                })
+                if(objeto!=undefined){
+                    objeto.cantidad+= parseInt(e.cantidad);
+                }
+            })
+            console.log(prod);
+            addDataset1(grafica1,"Productos mas vendidos", prod )
         }
         function addDataset(chart, label, data) {
             let dataGrafico =data.map((e)=>{
@@ -256,6 +299,21 @@
             })
             const newDataset = {
                 label: 'Total de Ventas',
+                data: dataGrafico
+            };
+            chart.data.labels=labels;
+            chart.data.datasets=[newDataset];
+            chart.update();
+        }
+        function addDataset1(chart, label, data) {
+            let dataGrafico =data.map((e)=>{
+                return e.cantidad;
+            })
+            let labels =data.map((e)=>{
+                return e.nombre;
+            })
+            const newDataset = {
+                label: 'Cantidad vendida',
                 data: dataGrafico
             };
             chart.data.labels=labels;
