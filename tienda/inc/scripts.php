@@ -27,4 +27,22 @@
         }
         return "";
     }
+    $("#btnLogOut").click((e)=>{
+        e.preventDefault();
+        let fd={
+        action:"logout",
+   
+    }
+    $.ajax({
+                type: "POST",
+                url: "controllers/usuarios.php",
+                data: fd,
+                success: function (response) {
+                    window.location="login.php";
+                },
+                error: function(jqHXR,textStatus,errorThrow){
+                    console.log(jqHXR,textStatus,errorThrow);
+                }
+            });
+    })
 </script>

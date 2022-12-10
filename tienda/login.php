@@ -1,5 +1,3 @@
-<?php session_start(); if(!isset($_SESSION["user"])){header('Location:  login.php');
-die(); } ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,9 +47,6 @@ die(); } ?>
           <li class="nav-item">
             <a class="nav-link" href="resultados.php">Resultados</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" id="btnLogOut" >Log Out</a>
-          </li>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown
@@ -75,4 +70,51 @@ die(); } ?>
   </div>
 </nav>   
 
-<main class="container text-center">
+<main class="container text-center d-flex justify-content-center">
+<div class="col-5">
+<form id="loginForm">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Usuario</label>
+    <input type="text" class="form-control" id="username" aria-describedby="emailHelp">
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+    <input type="password" class="form-control" id="pass">
+  </div>
+ 
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+
+
+<?php require "inc/scripts.php";?>
+<script>
+ $("#loginForm").submit((e)=>{
+    e.preventDefault();
+    let fd={
+        action:"login",
+        nombre:$("#username").val(),
+        pass:$("#pass").val()
+    }
+    $.ajax({
+                type: "POST",
+                url: "controllers/usuarios.php",
+                data: fd,
+                success: function (response) {
+                   response= JSON.parse(response)
+                   if(response.success){                    
+                    window.location="index.php"
+                   }else{
+                    alert(response.message);
+                   }
+                },
+                error: function(jqHXR,textStatus,errorThrow){
+                    console.log(jqHXR,textStatus,errorThrow);
+                }
+            });
+ })
+
+</script>
+
+<?php require "inc/foot.php";?>
