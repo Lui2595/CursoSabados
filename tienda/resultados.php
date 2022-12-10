@@ -287,7 +287,8 @@
                     objeto.cantidad+= parseInt(e.cantidad);
                 }
             })
-            console.log(prod);
+
+            //console.log(prod);
             addDataset1(grafica1,"Productos mas vendidos", prod )
         }
         function addDataset(chart, label, data) {
