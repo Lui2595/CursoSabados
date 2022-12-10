@@ -7,7 +7,7 @@
         <div class="d-flex w-100 justify-content-start">
             <input type="text" name="" id="picker">
             <button type="button" class="btn btn-success" id="mostrarResultados">Mostrar Resultados</button>
-            
+
         </div>
         <table class="table mt-3 bg-white " id="miTabla">
             <thead>
@@ -16,7 +16,7 @@
                     <th>Cliente</th>
                     <th>Fecha</th>
                     <th>Total</th>
-                    <th>Metodo de pago</th>        
+                    <th>Metodo de pago</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -29,20 +29,24 @@
                     <td><button type="button" class="btn btn-secondary">Editar</button>
                     <button type="button" class="btn btn-danger">Elminar</button>  </td>
                 </tr> -->
-               
-            </tbody>  
+
+            </tbody>
         </table>
         <div class="d-flex flex-column my-2">
-            <div class="d-flex justify-content-around"> 
+            <div class="d-flex justify-content-around">
                 <h2>Ticket Promedio</h2>
                 <h2 id="t_promedio"></h2>
             </div>
             <div class="d-flex flex-column mt-3" id="mejores_Clientes">
                 <h2>Mejores Clientes</h2>
             </div>
+            <div class="d-flex flex-column mt-3" id="">
+                <h2>Venta diaria </h2>
+                <canvas id="grafica"></canvas>
+            </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="addEditModal" tabindex="-1" aria-labelledby="formLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -57,13 +61,13 @@
                         <label for="" class="form-label">Nombre Producto</label>
                         <select name="id_producto" id="id_producto"  class="form-select" required>
                             <option value=""></option>
-                        </select> 
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Precio</label>
                         <input type="text" class="form-control" id="cantidad" name="cantidad"  required>
                     </div>
-           
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -73,35 +77,70 @@
             </div>
         </div>
     </div>
-        
+
 <?php require_once "inc/scripts.php";?>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript" src="vendors/datejs/date.js"></script>
 
     <script type="text/javascript">
         let datos =[];
+        let productos =[];
         let recursos=[];
         const urlController="controllers/resultados.php";
+
+        const ctx = document.getElementById('grafica');
+        const grafica=new Chart(ctx, {
+        type: 'bar',
+        data: {
+            // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            // datasets: [{
+            // label: '# of Votes en Saltillo',
+            // data: [12, 19, 3, 5, 2, 3],
+            // borderWidth: 1
+            // },{
+            // label: '# of Votes en torreon',
+            // data: [12, 19, 3, 5, 2, 3],
+            // borderWidth: 1
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+        });
+
 
         $(document).ready(()=>{
            // cargarRecursos();
             //cargarDatos();
             //$("#miTabla").DataTable();
             $("#picker").daterangepicker();
-            
+
         })
         $("#mostrarResultados").click(()=>{
             let date= $('#picker').val().split(" - ");
             //console.log(date);
+            let date1= Date.parse(date[0]);
+            let date2=Date.parse(date[1]);
+            let dif = date2-date1;
+            let dias =Math.floor( dif/(1000*60*60*24));
             date[0]=Date.parse(date[0]).toString("yyyy-MM-dd");
             date[1]=Date.parse(date[1]).toString("yyyy-MM-dd");
-            //console.log(date);
-            cargarDatos(date);
+            let arrDias=[{fecha:date[0],total:0}];
+            for (let i = 0; i < dias; i++) {
+                arrDias.push( {fecha:date1.add(1).day().toString("yyyy-MM-dd"),total:0});
+            }
+            //console.log(arrDias);
+            cargarDatos(date,arrDias);
         })
 
-        function cargarDatos(fechas){
+        function cargarDatos(fechas,arrDias){
+
             const data={
                 action:'read',
                 f1:fechas[0],
@@ -114,8 +153,10 @@
                 success: function (response) {
                    response= JSON.parse(response)
                    if(response.success){
-                    datos=response.data;
+                    datos=response.data.ventas;
+                    productos=response.data.productos;
                     cargarTabla();
+                    cargarGraficas(arrDias);
                    }else{
                     alert(response.message);
                    }
@@ -130,30 +171,31 @@
             //$("#tableBody").empty();
             const dt=$("table").DataTable();
             dt.clear().draw();
+            $("#mejores_Clientes").empty();
             let ticket_prom=0;
             let clientes=[];
             datos.forEach((e,i)=>{
                 let m_pago ="";
                 switch (e.metodo_de_pago) {
-                    case "1": 
-                        m_pago="Efectivo"          
+                    case "1":
+                        m_pago="Efectivo"
                         break;
-                    case "2": 
-                    m_pago="Tarjeta Debito"          
+                    case "2":
+                    m_pago="Tarjeta Debito"
                     break;
-                    case "3": 
-                    m_pago="Tarjeta Credito"          
+                    case "3":
+                    m_pago="Tarjeta Credito"
                     break;
-                    case "4": 
-                    m_pago="Cheque"          
+                    case "4":
+                    m_pago="Cheque"
                     break;
-                
+
                 }
                 const ind = clientes.findIndex(e1 => e1.id === e.id_cliente);
 
                 if (ind > -1) {
                       /* clientes contains the element we're looking for, at index "i" */
-                    clientes[ind].total+=parseFloat(e.total);   
+                    clientes[ind].total+=parseFloat(e.total);
                 }else{
                     clientes.push({
                         id:e.id_cliente,
@@ -168,19 +210,19 @@
                 //     <th>Cliente</th>
                 //     <th>Fecha</th>
                 //     <th>Total</th>
-                //     <th>Metodo de pago</th>  
+                //     <th>Metodo de pago</th>
                 dt.row.add([e.id,e.nombre,e.fecha,currency(e.total).format(),m_pago]).draw(false);
                 ticket_prom+=parseFloat(e.total)
-                
+
             })
-           
+
             ticket_prom/=datos.length;
             $("#t_promedio").html(currency(ticket_prom).format())
             clientes.sort((p1, p2) => (p1.total < p2.total) ? 1 : (p1.total > p2.total) ? -1 : 0)
             console.log(clientes);
             clientes.every((e,i)=>{
                 if(i>4) {return false};
-                
+
                 const ht=`
                     <div class="d-flex">
                         <div class="col-6"><h5>${e.name}</h5></div >
@@ -191,6 +233,34 @@
                 return true;
             })
 
+        }
+        function cargarGraficas(arrDias){
+            datos.forEach((e)=>{
+                let dia= e.fecha.split(" ")[0];
+                let objeto =arrDias.find((arr)=>{
+                    return arr.fecha==dia;
+                })
+                if(objeto!=undefined){
+                    objeto.total+= parseFloat(e.total);
+                }
+            })
+            console.log(arrDias);
+            addDataset(grafica,"Total de Ventas", arrDias )
+        }
+        function addDataset(chart, label, data) {
+            let dataGrafico =data.map((e)=>{
+                return e.total;
+            })
+            let labels =data.map((e)=>{
+                return e.fecha;
+            })
+            const newDataset = {
+                label: 'Total de Ventas',
+                data: dataGrafico
+            };
+            chart.data.labels=labels;
+            chart.data.datasets=[newDataset];
+            chart.update();
         }
         function cargarRecursos(){
             const fd=new FormData();
@@ -221,10 +291,10 @@
                 const ht =`<option value="${e.id}">${e.nombre}</option>`;
                 $("#id_producto").append(ht)
             })
-            
+
         }
-        
-        
+
+
         function findElemen(id){
            let Element;
            datos.every((e)=>{
@@ -260,7 +330,7 @@
                 contentType: false,
                 success: function (response) {
                    response= JSON.parse(response)
-                   if(response.success){                    
+                   if(response.success){
                    cargarDatos();
                    }else{
                     alert(response.message);
@@ -275,7 +345,7 @@
             $("#addEditModal").modal("show");
             $("#formLabel").html("Añadir Inventario");
             $("#action").val("create");
-        });       
+        });
         $("#submitForm").click(()=>{
             $("#addEditForm").submit();
         })
@@ -321,7 +391,7 @@
             // if(el!=undefined){
             //     $("#formLabel").html("Editar Inventario");
             //     $("#action").val("update");
-            //     if($("input[name='id']").length>0){    
+            //     if($("input[name='id']").length>0){
             //         $("input[name='id']").val(el.id);
             //     }else{
             //         $("#addEditForm").append('<input type="hidden" name="id" value="'+el.id+'">')
@@ -334,9 +404,9 @@
         })
 
 
-   
-    
-        
+
+
+
     </script>
 
 <?php require "inc/foot.php";?>

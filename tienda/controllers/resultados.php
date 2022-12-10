@@ -38,15 +38,22 @@ switch ($_POST["action"]) {
             $a=$r['f1'];
             $b=$r['f2'];
             $query="SELECT v.*, c.nombre FROM `ventas` v  inner join clientes c on c.id=v.id_cliente WHERE v.fecha BETWEEN DATE_FORMAT('$a','%Y-%m-%d') and DATE_FORMAT('$b','%Y-%m-%d')";
+            $query1="SELECT p.nombre, vp.cantidad FROM ventas_productos vp inner join productos p on p.id=vp.id_producto WHERE vp.id_venta in (SELECT v.id FROM `ventas` v  WHERE v.fecha BETWEEN DATE_FORMAT('$a','%Y-%m-%d') and DATE_FORMAT('$b','%Y-%m-%d')) ";
             $resutl=$db->query($query);
-            if($resutl){
+            $result1=$db->query($query1);
+            if($resutl && $result1){
                 $rows = array();
+                $rows1 = array();
                 while($row = $resutl->fetch_assoc())
                 {
                     $rows[] = $row;
                 }
+                while($row = $result1->fetch_assoc())
+                {
+                    $rows1[] = $row;
+                }
                 echo json_encode([
-                    "success"=>true,"data"=>$rows,
+                    "success"=>true,"data"=>["ventas"=>$rows,"productos"=>$rows1],
                     "message"=>"Estos son todas las Ventas"
                 ]); // Retornar JSON
                 
