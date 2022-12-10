@@ -289,6 +289,7 @@
             })
 
             //console.log(prod);
+            //ESTE ES EL CAMBIO
             addDataset1(grafica1,"Productos mas vendidos", prod )
         }
         function addDataset(chart, label, data) {
