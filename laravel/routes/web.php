@@ -35,4 +35,5 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::resource("post",PostController::class);
+    
 });
