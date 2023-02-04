@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Tags;
+use App\Models\User;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\MockObject\Stub\ReturnSelf;
 
 class PostController extends Controller
 {
@@ -14,7 +17,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        return "Holas estas en el index de post";
+        $usuarios=User::all();
+        $tags=Tags::all();
+        $post= Post::all()->map(function($e){
+            $e->usuario;
+            return $e;
+        });
+        $data=["post"=>$post,"recursos"=>["tags"=>$tags,"usuarios"=>$usuarios]];
+        return view("post",$data);
     }
 
     /**
@@ -33,9 +43,29 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        //
+        $r->validate([
+            'usuario' => 'required',
+            'titulo' => 'required',
+            'contenido' => 'required',
+        ]);
+
+        $p=new Post();
+        $p->user_id=$r->usuario;
+        $p->titulo=$r->titulo;
+        $p->sub_titulo=$r->subtitulo;
+        $p->categoria=$r->categoria;
+        $p->portada=$r->portada;
+        $p->contenido=$r->contenido;
+        $p->tags=$r->tags;
+        $p->save();
+
+        return response()->json([
+            'message' => 'Post Creado con exito',
+            'data' => $p,
+            'status' => 200,
+        ],200);
     }
 
     /**
@@ -67,9 +97,29 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $r, $id)
     {
-        //
+        $r->validate([
+            'usuario' => 'required',
+            'titulo' => 'required',
+            'contenido' => 'required',
+        ]);
+        $p = Post::find($id);
+        $p->user_id=$r->usuario;
+        $p->titulo=$r->titulo;
+        $p->sub_titulo=$r->subtitulo;
+        $p->categoria=$r->categoria;
+        $p->portada=$r->portada;
+        $p->contenido=$r->contenido;
+        $p->tags=$r->tags;
+        $p->save();
+
+        return response()->json([
+            'message' => 'Post Actualizado con exito',
+            'data' => $p,
+            'status' => 200,
+        ],200);
+
     }
 
     /**

@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("user_id");
             $table->string("titulo");
-            $table->string("sub_titulo");
-            $table->string("categoria");
-            $table->string("portada");
+            $table->string("sub_titulo")->nullable();
+            $table->string("categoria")->nullable();
+            $table->string("portada")->nullable();
             $table->text("contenido");
-            $table->string("tags");
+            $table->string("tags")->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
