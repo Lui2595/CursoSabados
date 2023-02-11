@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Tags;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\MockObject\Stub\ReturnSelf;
 
 class PostController extends Controller
@@ -56,10 +57,20 @@ class PostController extends Controller
         $p->titulo=$r->titulo;
         $p->sub_titulo=$r->subtitulo;
         $p->categoria=$r->categoria;
-        $p->portada=$r->portada;
+        if($r->portada!=""){
+            $r->validate([
+                'portada' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            ]);
+            $file=$r->file('portada');
+            $file->hashName();
+            $image_path = $file->store('img/post', 'public');
+            $p->portada=$image_path;
+
+        }
         $p->contenido=$r->contenido;
         $p->tags=$r->tags;
         $p->save();
+        $p->usuario;
 
         return response()->json([
             'message' => 'Post Creado con exito',
@@ -109,10 +120,27 @@ class PostController extends Controller
         $p->titulo=$r->titulo;
         $p->sub_titulo=$r->subtitulo;
         $p->categoria=$r->categoria;
-        $p->portada=$r->portada;
+
+        if($r->delFoto=="true"){
+            if(!Storage::disk("public")->delete($p->portada)){
+                return response()->json(["status"=>'fail',"data"=>[],"message"=>'Error al Eliminar Imagen'],500);
+            }
+            $p->portada="";
+        }
+        if($r->portada!=""){
+            $r->validate([
+                'portada' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            ]);
+            $file=$r->file('portada');
+            $file->hashName();
+            $image_path = $file->store('img/post', 'public');
+            $p->portada=$image_path;
+
+        }
         $p->contenido=$r->contenido;
         $p->tags=$r->tags;
         $p->save();
+        $p->usuario;
 
         return response()->json([
             'message' => 'Post Actualizado con exito',
@@ -128,8 +156,14 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $p = Post::find($id);
+        $p->delete();
+        return response()->json([
+            'message' => 'Post Elimando con exito',
+            'data' => [],
+            'status' => 200,
+        ],200);
     }
 }

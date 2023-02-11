@@ -1,11 +1,20 @@
 import _ from 'lodash';
 window._ = _;
 
-import $ from "jquery";
-window.$ = $;
+// import $ from "jquery";
+// window.$ = $;
+
+import dt from "datatables"
+window.DataTable = dt(window, $)
 
 import 'bootstrap';
 
+import FroalaEditor from "froala-editor"
+// Load a plugin.
+import 'froala-editor/js/plugins/align.min.js'
+import 'froala-editor/js/plugins/image.min.js'
+import 'froala-editor/js/plugins/video.min.js'
+window.FroalaEditor = FroalaEditor;
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -39,26 +48,26 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     enabledTransports: ['ws', 'wss'],
 // });
 window.addEventListener('DOMContentLoaded', () => {
-    let scrollPos = 0;
-    const mainNav = document.getElementById('mainNav');
-    const headerHeight = mainNav.clientHeight;
-    window.addEventListener('scroll', function() {
-        const currentTop = document.body.getBoundingClientRect().top * -1;
-        if ( currentTop < scrollPos) {
-            // Scrolling Up
-            if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
-                mainNav.classList.add('is-visible');
-            } else {
-                console.log(123);
-                mainNav.classList.remove('is-visible', 'is-fixed');
-            }
-        } else {
-            // Scrolling Down
-            mainNav.classList.remove(['is-visible']);
-            if (currentTop > headerHeight && !mainNav.classList.contains('is-fixed')) {
-                mainNav.classList.add('is-fixed');
-            }
-        }
-        scrollPos = currentTop;
-    });
+    // let scrollPos = 0;
+    // const mainNav = document.getElementById('mainNav');
+    // const headerHeight = mainNav.clientHeight;
+    // window.addEventListener('scroll', function() {
+    //     const currentTop = document.body.getBoundingClientRect().top * -1;
+    //     if ( currentTop < scrollPos) {
+    //         // Scrolling Up
+    //         if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
+    //             mainNav.classList.add('is-visible');
+    //         } else {
+    //             console.log(123);
+    //             mainNav.classList.remove('is-visible', 'is-fixed');
+    //         }
+    //     } else {
+    //         // Scrolling Down
+    //         mainNav.classList.remove(['is-visible']);
+    //         if (currentTop > headerHeight && !mainNav.classList.contains('is-fixed')) {
+    //             mainNav.classList.add('is-fixed');
+    //         }
+    //     }
+    //     scrollPos = currentTop;
+    // });
 })
