@@ -12,4 +12,7 @@ class Post extends Model
     public function usuario(){
         return $this->hasOne(User::class,"id","user_id");
     }
+    public function comments(){
+        return $this->hasMany(Comments::class,"post_id","id");
+    }
 }

@@ -166,4 +166,39 @@ class PostController extends Controller
             'status' => 200,
         ],200);
     }
+    public function uploadImage(Request $r){
+        if($r->file!=""){
+            $r->validate([
+                'file' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            ]);
+            $file=$r->file('file');
+            $file->hashName();
+            $image_path = $file->store('img/post/contenido', 'public');
+
+            return response()->json(["status"=>'ok',"link"=>"/storage/".$image_path,"message"=>'Insersión realizada con exito'], 200, []);
+        }else{
+            return response()->json(["status"=>'fail',"message"=>'No image'], 401, []);
+        }
+    }
+    public function showPost($id,$titulo){
+        $tags=Tags::all();
+        $post=  Post::find($id);
+        $post->usuario;
+        $post->comments;
+        $data=["post"=>$post,"recursos"=>["tags"=>$tags ]];
+        //return $data;
+        return view("postView",$data);
+
+    }
+
+    public function postList(){
+        $tags=Tags::all();
+        $post= Post::all()->map(function($e){
+            $e->usuario;
+            return $e;
+        });
+        $data=["post"=>$post,"recursos"=>["tags"=>$tags]];
+        //return $data;
+        return view("postList",$data);
+    }
 }

@@ -52,7 +52,7 @@
                                 <td>
                                     <div class="d-flex">
 
-                                          <button type="button" name="" id="" class="btn btn-success">Ver</button>
+                                          <button type="button" name="" id="" class="btn btn-success" onclick="ver({{$p->id}},'{{$p->titulo}}')">Ver</button>
                                           <button type="button" class="btn btn-primary" onclick="editPost({{$p->id}},this)">Editar</button>
                                           <button type="button" name="" id="" class="btn btn-danger" onclick="deletePost({{$p->id}},this)">Eliminar</button>
 
@@ -249,13 +249,16 @@
             $("#portada").show();
             $("#existingImage").hide();
         }
+        const ver=(id, titulo)=>{
+            window.open(`/post/${id}/${titulo.replaceAll(" ","-")}`);
+        }
 
     </script>
     <script type="module">
         $(document).ready(()=>{
             $(".table").DataTable()
             var editor = new FroalaEditor('#contenido',{requestHeaders: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            imageUploadURL: '/dashboard/notas/uploadImage',
+            imageUploadURL: '/dashboard/post/uploadImage',
             fileUploadParams: {
             id: 'contenido'
             }});
@@ -308,7 +311,7 @@
                     }).join("")
                     let time= `Creado: ${r.created_at.split(".")[0]} <br>Actualizado: ${r.updated_at.split(".")[0]} `;
                     let buttons = `<div class="d-flex">
-                                <button type="button" name="" id="" class="btn btn-success">Ver</button>
+                                <button type="button" name="" id="" class="btn btn-success" onclick="ver(${r.id},'${r.titulo}')">Ver</button>
                                 <button type="button" class="btn btn-primary" onclick="editPost(${r.id},this)">Editar</button>
                                 <button type="button" name="" id="" class="btn btn-danger" onclick="deletePost(${r.id},this)">Eliminar</button>
                                 </div>`
