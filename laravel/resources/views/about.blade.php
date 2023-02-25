@@ -1,17 +1,22 @@
 @extends('layouts.blog')
 
+
 @section("titulo-pagina")
-    Somos una escuela de programación
+   {{$setting->titulo}}
 @endsection
 
 @section("subtitulo-pagina")
-    Aprende PHP,HTML,CSS, Laravel,VueJS
+    {{$setting->subtitulo}}
 @endsection
 
 @section("imagen"){{ asset('assets/img/post-bg.jpg') }}@endsection
 
 @section("content")
 <div class="row gx-4 gx-lg-5 justify-content-center">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam fugit ducimus voluptates similique, possimus voluptatibus laudantium soluta explicabo iusto vero rerum corrupti saepe fugiat obcaecati. Ducimus doloremque ipsum dolorum repudiandae.
-</div>
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        @if ($setting->contenido!="" &&$setting->contenido!=null)
+            <p>{{$setting->contenido}}</p>
+        @endif
+        </div>
+    </div>
 @endsection

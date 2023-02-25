@@ -1,16 +1,23 @@
 @extends('layouts.blog')
 
 @section("titulo-pagina")
-    Descubre nuestros post
+   {{$setting->titulo}}
 @endsection
 
 @section("subtitulo-pagina")
-   Aquí podrás encontrar todos nuestros post
+    {{$setting->subtitulo}}
 @endsection
 
 @section("imagen"){{ asset('assets/img/post-bg.jpg') }}@endsection
 
 @section("content")
+@if ($setting->contenido!="" &&$setting->contenido!=null)
+<div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+            <p>{{$setting->contenido}}</p>
+        </div>
+    </div>
+@endif
 <div class="col-md-10 col-lg-8 col-xl-7" id="listaPost">
     @foreach ($post as $p)
         @if ($loop->index>1)

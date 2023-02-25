@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Settings;
 use App\Models\Tags;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ use PHPUnit\Framework\MockObject\Stub\ReturnSelf;
 
 class PostController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -192,12 +195,13 @@ class PostController extends Controller
     }
 
     public function postList(){
+        $s =Settings::where("pagina","=","post")->first();
         $tags=Tags::all();
         $post= Post::all()->map(function($e){
             $e->usuario;
             return $e;
         });
-        $data=["post"=>$post,"recursos"=>["tags"=>$tags]];
+        $data=["post"=>$post,"recursos"=>["tags"=>$tags],"setting"=>$s];
         //return $data;
         return view("postList",$data);
     }

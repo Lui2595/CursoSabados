@@ -1,11 +1,11 @@
 @extends('layouts.blog')
 
 @section("titulo-pagina")
-    Contactanos
+   {{$setting->titulo}}
 @endsection
 
 @section("subtitulo-pagina")
-    ¿Quieres saber más acerca de lo scursos?
+    {{$setting->subtitulo}}
 @endsection
 
 @section("imagen"){{ asset('assets/img/post-bg.jpg') }}@endsection
@@ -14,8 +14,10 @@
 
 <div class="row gx-4 gx-lg-5 justify-content-center">
     <div class="col-md-10 col-lg-8 col-xl-7">
-        <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
-        <div class="my-5">
+        @if ($setting->contenido!="" &&$setting->contenido!=null)
+        <p>{{$setting->contenido}}</p>
+         @endif
+    <div class="my-5">
             <!-- * * * * * * * * * * * * * * *-->
             <!-- * * SB Forms Contact Form * *-->
             <!-- * * * * * * * * * * * * * * *-->
@@ -23,25 +25,25 @@
             <!-- To make this form functional, sign up at-->
             <!-- https://startbootstrap.com/solution/contact-forms-->
             <!-- to get an API token!-->
-            <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+            <form id="contactForm" data-sb-form-api-token="API_TOKEN" action="" method="POST">
                 <div class="form-floating">
-                    <input class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
+                    <input class="form-control" id="nombre" name="nombre" type="text" placeholder="Enter your name..." data-sb-validations="required"  required/>
                     <label for="name">Name</label>
                     <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
                 </div>
                 <div class="form-floating">
-                    <input class="form-control" id="email" type="email" placeholder="Enter your email..." data-sb-validations="required,email" />
+                    <input class="form-control" id="email" name="email" type="email" placeholder="Enter your email..." data-sb-validations="required,email" required/>
                     <label for="email">Email address</label>
                     <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
                     <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
                 </div>
                 <div class="form-floating">
-                    <input class="form-control" id="phone" type="tel" placeholder="Enter your phone number..." data-sb-validations="required" />
+                    <input class="form-control" id="telefono" name="telefono" type="tel" placeholder="Enter your phone number..." data-sb-validations="required" required/>
                     <label for="phone">Phone Number</label>
                     <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" id="message" placeholder="Enter your message here..." style="height: 12rem" data-sb-validations="required"></textarea>
+                    <textarea class="form-control" id="contenido" name="contenido" placeholder="Enter your message here..." style="height: 12rem" data-sb-validations="required" required></textarea>
                     <label for="message">Message</label>
                     <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
                 </div>
@@ -52,11 +54,8 @@
                 <!-- has successfully submitted-->
                 <div class="d-none" id="submitSuccessMessage">
                     <div class="text-center mb-3">
-                        <div class="fw-bolder">Form submission successful!</div>
-                        To activate this form, sign up at
-                        <br />
-                        <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                    </div>
+                        <div class="fw-bolder">Hemos recibido tu mensaje pronto estaremos en contacto contigo</div>
+                       </div>
                 </div>
                 <!-- Submit error message-->
                 <!---->
@@ -72,5 +71,14 @@
 @endsection
 
 @section("scripts")
-<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+{{-- <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> --}}
+<script>
+    $("#contactForm").submit(function (e) {
+        e.preventDefault();
+        const data = new FormData(document.getElementById("contactForm"));
+        axios.post("",data).then((e)=>{$("#contactForm").trigger("reset");
+        $("#submitSuccessMessage").removeClass("d-none")
+    }).catch((e)=>{console.log(e)})
+    });
+</script>
 @endsection

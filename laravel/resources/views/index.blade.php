@@ -1,11 +1,11 @@
 @extends('layouts.blog')
 
 @section("titulo-pagina")
-    Experimenta, Vive y Comparte
+   {{$setting->titulo}}
 @endsection
 
 @section("subtitulo-pagina")
-    Blog Hecho para compartir
+    {{$setting->subtitulo}}
 @endsection
 
 @section("imagen"){{ asset('assets/img/about-bg.jpg') }}@endsection
@@ -13,6 +13,9 @@
 @section("content")
 <div class="row gx-4 gx-lg-5 justify-content-center">
     <div class="col-md-10 col-lg-8 col-xl-7">
+        @if ($setting->contenido!="" &&$setting->contenido!=null)
+            <p>{{$setting->contenido}}</p>
+        @endif
         <!-- Post preview-->
         <div class="post-preview">
             <a href="post.html">

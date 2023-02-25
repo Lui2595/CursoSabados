@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comments;
-use App\Models\Post;
+use App\Models\ContactForm;
 use Illuminate\Http\Request;
 
-class CommentsController extends Controller
+class ContactFormController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,15 +14,10 @@ class CommentsController extends Controller
      */
     public function index()
     {
-        $comments=Comments::all()->map(function($e){
-            $e->usuario;
-            return $e;
-        });;
-
-        $posts= Post::all();
-        $data=["comments"=>$comments,"recursos"=>["posts"=>$posts]];
+        $forms=ContactForm::all();
+        $data=["forms"=>$forms,"recursos"=>[]];
       //  return $data;
-        return view("comments",$data);
+        return view("contactForm",$data);
     }
 
     /**
@@ -33,7 +27,7 @@ class CommentsController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -42,18 +36,30 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        //
+        //return $r;
+        $f = new ContactForm();
+        $f->nombre=$r->nombre;
+        $f->email=$r->email;
+        $f->telefono=$r->telefono;
+        $f->contenido=$r->contenido;
+        $f->save();
+        return response()->json([
+            'message' => 'Fromulario enviado con exito',
+            'data' => $f,
+            'status' => 200,
+        ],200);
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Comments  $comments
+     * @param  \App\Models\ContactForm  $contactForm
      * @return \Illuminate\Http\Response
      */
-    public function show(Comments $comments)
+    public function show(ContactForm $contactForm)
     {
         //
     }
@@ -61,10 +67,10 @@ class CommentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Comments  $comments
+     * @param  \App\Models\ContactForm  $contactForm
      * @return \Illuminate\Http\Response
      */
-    public function edit(Comments $comments)
+    public function edit(ContactForm $contactForm)
     {
         //
     }
@@ -73,10 +79,10 @@ class CommentsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Comments  $comments
+     * @param  \App\Models\ContactForm  $contactForm
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comments $comments)
+    public function update(Request $request, ContactForm $contactForm)
     {
         //
     }
@@ -84,32 +90,17 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Comments  $comments
+     * @param  \App\Models\ContactForm  $contactForm
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $c = Comments::find($id);
+        $c = ContactForm::find($id);
         $c->delete();
         return response()->json([
-            'message' => 'Comentario Elimando con exito',
+            'message' => 'Contacto Elimando con exito',
             'data' => [],
             'status' => 200,
         ],200);
-    }
-    public function createFromPost(Request $r){
-
-        $c= new Comments();
-        $c->post_id=$r->id;
-        $c->nombre=$r->nombre;
-        $c->email=$r->email;
-        $c->comentario=$r->comentario;
-        $c->save();
-        return response()->json([
-            'message' => 'Comentario Creado con exito',
-            'data' => $c,
-            'status' => 200,
-        ],200);
-
     }
 }

@@ -39,6 +39,18 @@
                           <li class="nav-item">
                             <a class="nav-link" href="{{ route('post.index') }}">Post</a>
                           </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{ route('comments.index') }}">Comentarios</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{ route('users.index') }}">Usuarios</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{ route('settings.index') }}">Configuración</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{ route('contact.index') }}">Contacto</a>
+                          </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
