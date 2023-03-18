@@ -46,12 +46,14 @@ export default function Dashboard(props) {
     const closeModal = ()=> setShow(false);
     const guardarEmpleado=()=>{
         if (updating){
-            axios.put("",fomularioState).then((e)=>{
+            fomularioState._method="patch"
+            axios.post("empleados/"+fomularioState.id,fomularioState).then((e)=>{
                 let data=e.data.data;
                 let newState= empleados.map((e1)=>{
                     if (e1.id==data.id){
                         return data;
                     }
+                    return e1;
                 })
                 setEmpleados(newState)
                 setForm(initialState);
@@ -61,6 +63,7 @@ export default function Dashboard(props) {
             }).catch((e)=>{
                 console.log(e);
             })
+            return;
         }
         axios.post("",fomularioState).then((e)=>{
             setEmpleados(oldArray => [...oldArray,e.data.data] )

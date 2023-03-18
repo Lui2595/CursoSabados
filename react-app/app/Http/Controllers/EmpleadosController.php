@@ -76,9 +76,17 @@ class EmpleadosController extends Controller
      * @param  \App\Models\Empleados  $empleados
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empleados $empleados)
+    public function update(Request $r, $id)
     {
-        //
+        $e = Empleados::find($id);
+        $e->nombre=$r->nombre;
+        $e->apellido=$r->apellido;
+        $e->nss=$r->nss;
+        $e->fecha_ingreso=$r->fecha_ingreso;
+        $e->status=$r->status;
+        $e->save();
+        return response()->json(["status"=>'ok',"data"=>$e,"message"=>'Actualización realizada con exito'], 200, []);;
+
     }
 
     /**
