@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empleados;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class EmpleadosController extends Controller
 {
@@ -43,8 +44,18 @@ class EmpleadosController extends Controller
         $e->nss=$r->nss;
         $e->fecha_ingreso=$r->fecha_ingreso;
         $e->status=$r->status;
+        if($r->img!=""){
+            $r->validate([
+                'img' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            ]);
+            $file=$r->file('img');
+            $file->hashName();
+            $image_path = $file->store('img/empleados', 'public');
+            $e->img=$image_path;
+
+        }
         $e->save();
-        return response()->json(["status"=>'ok',"data"=>$e,"message"=>'Insersión realizada con exito'], 200, []);;
+        return response()->json(["status"=>'ok',"data"=>$e,"message"=>'Insersión realizada con exito'], 200, []);
     }
 
     /**
@@ -84,8 +95,24 @@ class EmpleadosController extends Controller
         $e->nss=$r->nss;
         $e->fecha_ingreso=$r->fecha_ingreso;
         $e->status=$r->status;
+        if($r->delFoto){
+            if(!Storage::disk("public")->delete($e->img)){
+                return response()->json(["status"=>'fail',"data"=>[],"message"=>'Error al Eliminar Imagen'],500);
+            }
+            $e->img="";
+        }
+        if($r->img!=""){
+            $r->validate([
+                'img' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            ]);
+            $file=$r->file('img');
+            $file->hashName();
+            $image_path = $file->store('img/empleados', 'public');
+            $e->img=$image_path;
+
+        }
         $e->save();
-        return response()->json(["status"=>'ok',"data"=>$e,"message"=>'Actualización realizada con exito'], 200, []);;
+        return response()->json(["status"=>'ok',"data"=>$e,"message"=>'Actualización realizada con exito'], 200, []);
 
     }
 
@@ -95,8 +122,29 @@ class EmpleadosController extends Controller
      * @param  \App\Models\Empleados  $empleados
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Empleados $empleados)
+    public function destroy($id)
     {
-        //
+        $e = Empleados::find($id);
+        if($e->img!="" && $e->img!=null){
+            if(!Storage::disk("public")->delete($e->img)){
+                return response()->json(["status"=>'fail',"data"=>[],"message"=>'Error al Eliminar Imagen'],500);
+            }
+        }
+        $e->delete();
+        return response()->json(["status"=>'ok',"data"=>"","message"=>'Eliminación realizada con exito'], 200, []);
+    }
+    public function destroyMultiple($ids)
+    {
+        $ids =explode(",", $ids);
+        foreach($ids as $id){
+            $e = Empleados::find($id);
+            if($e->img!="" && $e->img!=null){
+                if(!Storage::disk("public")->delete($e->img)){
+                    return response()->json(["status"=>'fail',"data"=>[],"message"=>'Error al Eliminar Imagen'],500);
+                }
+            }
+            $e->delete();
+        }
+        return response()->json(["status"=>'ok',"data"=>"","message"=>'Eliminaciones realizadas con exito'], 200, []);
     }
 }

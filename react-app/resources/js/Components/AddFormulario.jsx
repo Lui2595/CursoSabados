@@ -1,4 +1,17 @@
-export default function formulario(props, updateFormulario){
+export default function formulario(props, updateFormulario,eliminarImagen,contenido=""){
+    let imgFormulario =  <input type="file" name="img" id="" className="form-control" placeholder="" aria-describedby="helpId" onChange={updateFormulario}/>
+    if(props.img != "" && props.img != null){
+        imgFormulario=<>
+                        <img src={props.preview} alt="" srcSet="" />
+                        <button className="btn btn-danger" onClick={eliminarImagen}>Eliminar</button>
+                        <div id="editor"></div>
+                        </>
+    }
+    if(contenido!=""){
+        return (
+            contenido
+        )
+    }
     return (
         <>
        <div className="mb-3">
@@ -13,6 +26,10 @@ export default function formulario(props, updateFormulario){
          <label for="" className="form-label">NSS</label>
          <input type="text" name="nss" id="" value={props.nss} className="form-control" placeholder="" aria-describedby="helpId" onChange={updateFormulario}/>
        </div>
+       <div className="mb-3">
+         <label for="" className="form-label">Imagen</label>
+        {imgFormulario}
+        </div>
        <div className="mb-3">
          <label for="" className="form-label">Fecha de Ingreso</label>
          <input type="date" name="fecha_ingreso" id="" value={props.fecha_ingreso} className="form-control" placeholder="" aria-describedby="helpId" onChange={updateFormulario}/>

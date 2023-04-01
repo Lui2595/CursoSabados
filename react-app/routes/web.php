@@ -35,6 +35,7 @@ Route::prefix('dashboard')->group(function () {
 
     Route::resource("/empleados",EmpleadosController::class);
     Route::get('/empleados',[EmpleadosController::class,"index"])->name("empleados");
+    Route::delete('/empleados/multiple/{ids}',[EmpleadosController::class,"destroyMultiple"]);
 
 })->middleware(['auth', 'verified']);
 
